@@ -23,24 +23,86 @@ public abstract class Enemy : MonoBehaviour
 
     protected bool flipped;
 
+    
+
     public void Start()
+    {
+        Init();
+    }
+
+    public virtual void Update()
+    {
+        Patrol();
+    }
+
+    public virtual void Init()
     {
         animator = GetComponentInChildren<Animator>();
         target = waypoints[1].position;
     }
 
+
     public virtual void Attack()
     {
 
     }
+       
 
-    public abstract void Update();
+    public virtual void Patrol()
+    {
+        velocity = ((transform.position - previousPosition) / Time.deltaTime);
+        previousPosition = transform.position;
 
-    public abstract void Patrol();
+        animator.SetFloat("speed", velocity.magnitude);
 
-    public abstract IEnumerator SetTarget(Vector3 position);
+        if (transform.position != target)
+            transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
+        else
+        {
+            if (target == waypoints[0].position)
+            {
+                if (flipped)
+                {
+                    flipped = !flipped;
+                    StartCoroutine("SetTarget", waypoints[1].position);
+                }
+                
+            }
+            else
+            {
+                if (!flipped)
+                {
 
-    public abstract void Flip();
+                    flipped = !flipped;
+                    StartCoroutine("SetTarget", waypoints[0].position);
+
+                }
+                
+            }
+
+        }
+    }
+
+    public virtual IEnumerator SetTarget(Vector3 position)
+    {
+
+        yield return new WaitForSeconds(5f);
+        target = position;
+        Flip();
+    }
+
+
+    public virtual void Flip()
+    {
+        if (flipped)
+            transform.localScale = new Vector3(-1f, 1f, 1f);
+        else
+        {
+            transform.localScale = new Vector3(1f, 1f, 1f);
+
+        }
+
+    }
 
 
 }

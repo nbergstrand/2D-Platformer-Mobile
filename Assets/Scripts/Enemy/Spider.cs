@@ -4,28 +4,10 @@ using UnityEngine;
 
 public class Spider : Enemy
 {
-    public override void Patrol()
+    public override void Init()
     {
-    }
+        base.Init();
 
-    public override IEnumerator SetTarget(Vector3 position)
-    {
-        yield return new WaitForSeconds(2f);
-    }
-
-    public override void Update()
-    {
-
-    }
-    public override void Flip()
-    {
-        if (flipped)
-            transform.localScale = new Vector3(-1f, -1f, -1f);
-        else
-        {
-            transform.localScale = new Vector3(1f, 1f, 1f);
-
-        }
-
+        
     }
 }
