@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
 
     Rigidbody2D _rigidBody;
@@ -14,20 +14,41 @@ public class Player : MonoBehaviour
     float _speed;
 
     Animator _playerAnimator;
-    Animator _effectAnimator;
+    
     bool _checkGrounded;
 
     Transform _playerGFX;
-    
+
+    Animator _effectAnimator;
+
+    Attack _attack;
+        
+    [SerializeField]
+    LayerMask _groundMask;
+
+    [SerializeField]
+    int _attackPower;
+            
+    public int AttackPower
+    {
+        private set{}
+        get{return _attackPower; }
+    }
+
+    [SerializeField]
+    int _health;
+
+    public int Health { get; set; }
+      
 
     void Start()
     {
+        Health = _health;
         _rigidBody = GetComponent<Rigidbody2D>();
         _playerAnimator = GetComponentInChildren<Animator>();
         _playerGFX = GetComponent<Transform>();
         _effectAnimator = gameObject.transform.GetChild(1).GetComponent<Animator>();
-
-
+        _attack = GetComponentInChildren<Attack>();
     }
 
     void Update()
@@ -48,13 +69,16 @@ public class Player : MonoBehaviour
         {
             if (move < 0)
             {
-                _playerGFX.localScale = new Vector3(-1f, 1f, 1f);
+                //_playerGFX.localScale = new Vector3(-1f, 1f, 1f);
+                _playerGFX.localEulerAngles = new Vector3(0, 180, 0);
             }
             else
             {
-                _playerGFX.localScale = new Vector3(1f, 1f, 1f);
+                //_playerGFX.localScale = new Vector3(1f, 1f, 1f);
+                _playerGFX.localEulerAngles = new Vector3(0, 0, 0);
+
             }
-            
+
         }
 
         if(_checkGrounded)
@@ -75,24 +99,14 @@ public class Player : MonoBehaviour
         
     }
 
-    void PlayerAttack()
-    {
-        if(Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0) && IsGrounded())
-        {
-            _playerAnimator.SetTrigger("attack");
-            _effectAnimator.SetTrigger("attack");
-        }
-    }
-
-
     bool IsGrounded()
     {
-        
-        RaycastHit2D hitInfo  = Physics2D.Raycast(transform.position, Vector2.down, 0.60f);
 
-        if(hitInfo.collider != null && hitInfo.collider.tag == "Ground")
+        RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.down, 0.70f,  _groundMask);
+        
+        if (hitInfo.collider != null && hitInfo.collider.tag == "Ground")
         {
-            
+
             return true;
         }
         else
@@ -111,4 +125,20 @@ public class Player : MonoBehaviour
 
     }
 
+    void PlayerAttack()
+    {
+        if(Input.GetKeyDown(KeyCode.E) && IsGrounded() && _attack.canAttack)
+        {
+            _playerAnimator.SetTrigger("attack");
+            _effectAnimator.SetTrigger("attack");
+        }
+    }
+
+    public void Damage(int damageAmount)
+    {
+        Debug.Log("Hit: " + this.name + " with Damage " + damageAmount);
+        Health -= damageAmount;
+    }
+
+    
 }

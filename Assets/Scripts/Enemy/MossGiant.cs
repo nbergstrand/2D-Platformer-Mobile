@@ -5,10 +5,8 @@ using UnityEngine.UI;
 
 public class MossGiant : Enemy
 {
-    public override void Init()
-    {
-        base.Init();
-    }
+    
+      
 
 
 }

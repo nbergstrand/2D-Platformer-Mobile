@@ -4,12 +4,8 @@ using UnityEngine;
 
 public class Skeleton : Enemy
 {
+    
 
-    public override void Init()
-    {
-        base.Init();
-
-        
-    }
+      
 
 }
