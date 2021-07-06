@@ -10,21 +10,53 @@ public class InventoryManager : MonoBehaviour
     private static InventoryManager _instance;
     public static InventoryManager Instance { get{ return _instance; } }
     #endregion
-    public int Diamonds { private set; get; }
-    public static Action<int> OnDiamondAmountChange;
+    public int Gems { private set; get; }
+    public static Action<int> OnGemAmountChange;
+
+    public bool HasFlameSword { get; private set; }
+    public bool HasBootsOfFlight { get; private set; }
+    public bool HasKeyToCastle { get; private set; }
+
 
     private void Awake()
     {
         _instance = this;
     }
 
-    public void UpdateDiamondAmount(int amount)
+    private void Start()
     {
-        Diamonds += amount;
+        OnGemAmountChange(Gems);
+    }
 
-        if(OnDiamondAmountChange != null)
+    public void UpdateGemAmount(int amount)
+    {
+        Gems += amount;
+
+        if(OnGemAmountChange != null)
         {
-            OnDiamondAmountChange(Diamonds);
+            OnGemAmountChange(Gems);
         }
     }
+
+    public void AddItem(int item)
+    {
+        switch (item)
+        {
+            case 0:
+                HasFlameSword = true;
+                break;
+
+            case 1:
+                HasBootsOfFlight = true;
+                break;
+
+            case 2:
+                HasKeyToCastle = true;
+                break;
+        }
+
+        Debug.Log("Bought item " + item);
+    }
+
+    
 }

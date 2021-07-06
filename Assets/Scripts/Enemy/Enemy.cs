@@ -178,16 +178,19 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
     public virtual void Damage(int damageAmount)
     {
+        if (!isDead)
+            return;
+
         Health -= damageAmount;
 
-        if(!isDead)
-            animator.SetTrigger("hit");
+
+        animator.SetTrigger("hit");
 
         isHit = true;
         inCombat = true;
 
 
-        if (Health <= 0 && !isDead)
+        if (Health <= 0)
         {
             isDead = true;
             animator.SetTrigger("death");

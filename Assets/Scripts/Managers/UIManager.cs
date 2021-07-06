@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour
     }
     #endregion
     [SerializeField]
-    Text _diamondText;
+    Text _gemText;
     
     [SerializeField]
     GameObject _shop;
@@ -29,18 +29,19 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         _instance = this;
-        InventoryManager.OnDiamondAmountChange += UpdateUI;
+        InventoryManager.OnGemAmountChange += UpdateUI;
     }
     private void UpdateUI(int amount)
     {
-        _diamondText.text = "Gems: " + amount;
-       
+        _gemText.text = "" + amount;
+        _shopGemAmount.text = "" + InventoryManager.Instance.Gems + "G";
+
     }
 
     public void OpenShop()
     {
         _shop.SetActive(true);
-        _shopGemAmount.text = "" + InventoryManager.Instance.Diamonds + "G";
+        _shopGemAmount.text = "" + InventoryManager.Instance.Gems + "G";
     }
 
     public void CloseShop()

@@ -5,20 +5,20 @@ using UnityEngine;
 public class Diamonds : MonoBehaviour
 {
     [SerializeField]
-    int _diamondAmount;
+    int _gemAmount;
        
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if(other.tag == "Player")
         {
-            InventoryManager.Instance.UpdateDiamondAmount(_diamondAmount);
+            InventoryManager.Instance.UpdateGemAmount(_gemAmount);
             Destroy(gameObject);
         }
     }
 
     public void SetAmount(int amount)
     {
-        _diamondAmount = amount;
+        _gemAmount = amount;
     }
 }
