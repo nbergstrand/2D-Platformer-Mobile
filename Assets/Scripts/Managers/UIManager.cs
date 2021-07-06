@@ -26,12 +26,15 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     Image _selectionImage;
 
+    [SerializeField]
+    Image _health;
+
     private void Awake()
     {
         _instance = this;
-        InventoryManager.OnGemAmountChange += UpdateUI;
+        InventoryManager.OnGemAmountChange += UpdateGemUI;
     }
-    private void UpdateUI(int amount)
+    private void UpdateGemUI(int amount)
     {
         _gemText.text = "" + amount;
         _shopGemAmount.text = "" + InventoryManager.Instance.Gems + "G";
@@ -53,5 +56,10 @@ public class UIManager : MonoBehaviour
     public void UpdateSelectionPosition(float yPosition)
     {
         _selectionImage.rectTransform.anchoredPosition = new Vector2(_selectionImage.rectTransform.anchoredPosition.x, yPosition);
+    }
+
+    public void UpdateHealthUI(int health)
+    {
+        _health.fillAmount = (float)health / 100;
     }
 }

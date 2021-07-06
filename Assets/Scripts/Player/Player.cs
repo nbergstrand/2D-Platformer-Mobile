@@ -38,6 +38,8 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField]
     int _health;
 
+    bool isDead = false;
+
     public int Health { get; set; }
       
 
@@ -53,8 +55,12 @@ public class Player : MonoBehaviour, IDamageable
 
     void Update()
     {
-        PlayerMovement();
-        PlayerAttack();
+        if(!isDead)
+        {
+            PlayerMovement();
+            PlayerAttack();
+        }
+        
     }
 
     void PlayerMovement()
@@ -138,6 +144,16 @@ public class Player : MonoBehaviour, IDamageable
     {
         Debug.Log("Hit: " + this.name + " with Damage " + damageAmount);
         Health -= damageAmount;
+
+        UIManager.Instance.UpdateHealthUI(Health);
+
+        if(Health <= 0 && !isDead)
+        {
+            isDead = true;
+            _playerAnimator.SetTrigger("death");
+
+        }
+
     }
 
     

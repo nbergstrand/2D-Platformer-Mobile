@@ -16,7 +16,10 @@ public class Attack : MonoBehaviour
         if(hit != null && canDoDamage)
         {
             if (other.tag == "Enemy")
+            {
                 hit.Damage(GetComponentInParent<Player>().AttackPower);
+
+            }
             else
                 hit.Damage(GetComponentInParent<Enemy>().AttackPower);
             canDoDamage = false;

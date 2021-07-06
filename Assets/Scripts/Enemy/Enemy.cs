@@ -178,9 +178,10 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
     public virtual void Damage(int damageAmount)
     {
-        if (!isDead)
-            return;
 
+        if (isDead)
+            return;
+        
         Health -= damageAmount;
 
 
