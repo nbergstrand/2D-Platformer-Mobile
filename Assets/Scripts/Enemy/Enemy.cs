@@ -51,7 +51,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     float _attackTimer;
 
     [SerializeField]
-    int _diamonds;
+    int _gems;
 
     [SerializeField]
     GameObject _loot;
@@ -203,7 +203,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     {
         var loot = Instantiate(_loot, _lootPosition.position, Quaternion.identity);
 
-        loot.GetComponent<Diamonds>().SetAmount(_diamonds);
+        loot.GetComponent<Diamonds>().SetAmount(_gems);
     }
 
 }

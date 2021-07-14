@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour, IDamageable
 {
@@ -65,22 +66,28 @@ public class Player : MonoBehaviour, IDamageable
 
     void PlayerMovement()
     {
-        float move = Input.GetAxisRaw("Horizontal") * _speed;
-        _rigidBody.velocity = new Vector2(move, _rigidBody.velocity.y);
+        
+        Vector2 move = Gamepad.current.leftStick.ReadValue();
 
-        _playerAnimator.SetFloat("speed", Mathf.Abs(move));
+        if (Keyboard.current.aKey.isPressed)
+            move = new Vector2(-1f, _rigidBody.velocity.y);
+
+        if (Keyboard.current.dKey.isPressed)
+            move = new Vector2(1f, _rigidBody.velocity.y);
+        
+        _rigidBody.velocity = new Vector2(move.x * _speed, _rigidBody.velocity.y);
+       
+        _playerAnimator.SetFloat("speed", Mathf.Abs(move.x));
 
         
-        if(move != 0)
+        if(move.x != 0)
         {
-            if (move < 0)
+            if (move.x < 0)
             {
-                //_playerGFX.localScale = new Vector3(-1f, 1f, 1f);
                 _playerGFX.localEulerAngles = new Vector3(0, 180, 0);
             }
             else
             {
-                //_playerGFX.localScale = new Vector3(1f, 1f, 1f);
                 _playerGFX.localEulerAngles = new Vector3(0, 0, 0);
 
             }
@@ -93,12 +100,12 @@ public class Player : MonoBehaviour, IDamageable
                 _playerAnimator.SetBool("jump", false);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
+        if ((Gamepad.current.aButton.wasPressedThisFrame || Keyboard.current.spaceKey.wasPressedThisFrame ) && IsGrounded())
         {
             _checkGrounded = false;
             StartCoroutine(Jump());
             _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpHeight);
-            
+          
         }
        
 
@@ -133,7 +140,7 @@ public class Player : MonoBehaviour, IDamageable
 
     void PlayerAttack()
     {
-        if(Input.GetKeyDown(KeyCode.E) && IsGrounded() && _attack.canAttack)
+        if((Gamepad.current.bButton.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame) && IsGrounded() && _attack.canAttack)
         {
             _playerAnimator.SetTrigger("attack");
             _effectAnimator.SetTrigger("attack");
@@ -155,6 +162,7 @@ public class Player : MonoBehaviour, IDamageable
         }
 
     }
+
 
     
 }
